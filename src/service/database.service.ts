@@ -11,12 +11,14 @@ class DatabaseService {
   constructor() {
     this.client = new MongoClient(process.env.MONGO_URL as string);
     this.db = this.client.db(process.env.MONGO_DB_NAME);
-    this.messages = this.db.collection(process.env.MONGO_COLLECTION_NAME || "messages");
+    this.messages = this.db.collection(
+      process.env.MONGO_COLLECTION_NAME || "messages"
+    );
   }
 
   async connect() {
     await this.client.connect();
-    console.log("✅ Connected to MongoDB");
+    console.log(`✅ Connected to MongoDB with database ${this.db.databaseName}`) ;
   }
 }
 
