@@ -1,11 +1,11 @@
 import express , {Request ,Response} from "express";
-import http from "http";
+import http from "http"; 
+import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
-import databaseService from "./service/database.service";
-import messageRoutes from "./routers/message.routes";
-import swaggerUi from "swagger-ui-express";
-import swaggerJsdoc from "swagger-jsdoc";
+import { database } from "./config/database";
+import swaggerDocs from "./docs/swagger";
+import Routers from './routers/index';
 dotenv.config();
 
 const app = express();
@@ -13,48 +13,17 @@ const  httpServer = http.createServer(app);
 // middleware
 app.use(express.json());
 app.use(cors());
+app.use(morgan(""));
 
- const options = {
-   definition: {
-     openapi: "3.0.0",
-     info: {
-       title: "Mini Blog API",
-       description:
-         "API endpoints for a mini blog services documented on swagger pro vip",
-       contact: {
-         name: "Desmond Obisi",
-         email: "info@miniblog.com",
-         url: "https://github.com/DesmondSanctity/node-js-swagger",
-       },
-       version: "1.0.0",
-     },
-     servers: [
-       {
-         url: "http://localhost:5000/",
-         description: "Local server",
-       },
-       {
-         url: "<your live url here>",
-         description: "Live server",
-       },
-     ],
-   },
-   // looks for configuration in specified directories
-   apis: ["./router/*.js/*.ts"],
- };
-
-const swaggerSpec = swaggerJsdoc(options);
-
+app.use('/api',Routers);
 //routers
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/api/v1/messages", messageRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-databaseService.connect().then(() => {
-    httpServer.listen(PORT, () => {
-        console.log(`✅ Server is running at http://localhost:${PORT}`);
-    }
-    );
-});
+database.connect().then(()=>{
+  httpServer.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+
+  swaggerDocs(app, PORT as number);
+})

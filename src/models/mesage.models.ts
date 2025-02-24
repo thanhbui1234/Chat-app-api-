@@ -1,18 +1,26 @@
 import mongoose , {Schema , Document} from 'mongoose';
+import { Imessage } from '../interface';
+import { ModelType } from '../interface/const';
 
-export interface Imessage extends Document{
-    senderId: string;
-    receiverId: string;
-    message: string;
-    createAt: Date;
-}
 
-const mongoSchema = new Schema({
-    senderId: {type: mongoose.Schema.Types.ObjectId ,  ref:'User' , required: true},
-    receiverId: {type: mongoose.Schema.Types.ObjectId, ref :'User' , required: true},
-    content : {type: String , required: true},
-},{
-    timestamps: true
-})
 
-export default mongoose.model<Imessage>('Message', mongoSchema);
+const mongoSchema = new Schema<Imessage>(
+  {
+    sender_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    receiver_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    content: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export default mongoose.model<Imessage>(ModelType.message, mongoSchema);
