@@ -24,12 +24,10 @@ export class AuthService {
 
     async loginUser(data : IUser) {
         const  user = await this.db.collection(ModelType.user).findOne({email : data.email})
-      console.log('huhu');
-      
-        if (!user || !(comparePassword(data.password,user.password)) ){
+        if (!user || !(comparePassword(data.password, String(user.password)))) {
           throw new Error("Invalid email or password");
         }
-        const token = createAcessToken({email : user.email});
+        const token = createAcessToken({ email: user.email });
        return token
         
     }

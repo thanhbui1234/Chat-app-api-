@@ -6,7 +6,7 @@ const authController = new AuthController();
 
 /**
  * @swagger
- * /api/auth/register:
+ * /api/v1/auth/register:
  *   post:
  *     summary: Đăng ký tài khoản mới
  *     tags: [Auth]
@@ -17,13 +17,19 @@ const authController = new AuthController();
  *           schema:
  *             type: object
  *             required:
- *               - username
+ *               - user_name
  *               - password
+ *               - email
  *             properties:
- *               username:
+ *               user_name:
  *                 type: string
  *               password:
  *                 type: string
+ *               age:
+ *                type: number  
+ *               email:  
+ *                type: string
+ *               
  *     responses:
  *       200:
  *         description: Đăng ký thành công
